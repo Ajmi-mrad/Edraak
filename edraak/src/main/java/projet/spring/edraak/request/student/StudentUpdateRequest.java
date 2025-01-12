@@ -1,49 +1,41 @@
-package projet.spring.edraak.model;
+package projet.spring.edraak.request.student;
 
-import jakarta.persistence.*;
 import lombok.*;
+import projet.spring.edraak.model.Section;
 
 import java.time.LocalDate;
 
 
-
-
-
-@MappedSuperclass
-public class Person {
-
-    @Column(name = "name")
+@AllArgsConstructor
+@NoArgsConstructor
+public class StudentUpdateRequest {
+    private String id;
     private String name;
-    @Column(name = "lastName")
     private String lastName;
-    @Column(name = "email")
     private String email;
-    @Column(name = "phoneNumber")
     private String phoneNumber;
-    @Column(name = "birthDate")
     private LocalDate birthDate;
-    @Column(name = "address")
     private String address;
-    @Column(name = "nationality")
-
     private String nationality;
-    @Column(name = "numId")
     private String numId;
-    public Person(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.birthDate = birthDate;
-        this.address = address;
-        this.nationality = nationality;
-        this.numId = numId;
+    //type of student if a student or an employee
+    private String typeStudent;
+    // heritage de la classe Person
+    private String level;
+    private Section section;
+    private String school;
+    // if student is an employee
+    private String job;
+    private String company;
 
+    public String getId() {
+        return id;
     }
-    public Person(){
 
+    public void setId(String id) {
+        this.id = id;
     }
-    // Getters and Setters
+
     public String getName() {
         return name;
     }
@@ -106,5 +98,53 @@ public class Person {
 
     public void setNumId(String numId) {
         this.numId = numId;
+    }
+
+    public String getTypeStudent() {
+        return typeStudent;
+    }
+
+    public void setTypeStudent(String typeStudent) {
+        this.typeStudent = typeStudent;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 }

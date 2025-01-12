@@ -1,8 +1,8 @@
 package projet.spring.edraak.service.student;
 
 import projet.spring.edraak.model.Student;
-import projet.spring.edraak.request.AddStudentRequest;
-import projet.spring.edraak.request.StudentUpdateRequest;
+import projet.spring.edraak.request.student.AddStudentRequest;
+import projet.spring.edraak.request.student.StudentUpdateRequest;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,24 +1,29 @@
 package projet.spring.edraak.service.student;
 
 import projet.spring.edraak.exceptions.StudentNotFoundException;
+import projet.spring.edraak.model.Section;
 import projet.spring.edraak.model.Student;
+import projet.spring.edraak.repository.SectionRepository;
 import projet.spring.edraak.repository.StudentRepository;
-import projet.spring.edraak.request.AddStudentRequest;
-import projet.spring.edraak.request.StudentUpdateRequest;
-import projet.spring.edraak.service.student.IStudentService;
-import projet.spring.edraak.repository.StudentRepository;
+import projet.spring.edraak.request.student.AddStudentRequest;
+import projet.spring.edraak.request.student.StudentUpdateRequest;
+
 import java.time.LocalDate;
 import java.util.*;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Data
 @Service
-@RequiredArgsConstructor
 public class StudentService implements IStudentService{
     private final StudentRepository studentRepository;
+    private final SectionRepository sectionRepository;
+
+    public StudentService(StudentRepository studentRepository, SectionRepository sectionRepository) {
+        this.studentRepository = studentRepository;
+        this.sectionRepository = sectionRepository;
+    }
 
     @Override
     public Student getStudentById(Long id){
@@ -27,14 +32,16 @@ public class StudentService implements IStudentService{
     }
     @Override
     public Student addStudent(AddStudentRequest request) {
-        /*
-        return Optional.of(student).filter(s-> !studentRepository.existsByEmail(
-                s.getEmail()))
-                .map(studentRepository::save)
-                .orElseThrow(()-> new StudentNotFoundException("Student already exists"));*/
-        return studentRepository.save(createStudent(request));
+        Section section = Optional.ofNullable(sectionRepository.findByName(request.getSection().getName()))
+                .orElseGet(()-> {
+                    Section newSection = new Section(request.getSection().getName());
+                    return sectionRepository.save(newSection);
+                });
+        request.setSection(section);
+        return studentRepository.save(createStudent(request,section ));
     }
-    public Student createStudent(AddStudentRequest request){
+    public Student createStudent(AddStudentRequest request, Section section){
+
         return new Student(
                 request.getName(),
                 request.getLastName(),
@@ -46,12 +53,14 @@ public class StudentService implements IStudentService{
                 request.getNumId(),
                 request.getTypeStudent(),
                 request.getLevel(),
-                request.getSection(),
+                section,
                 request.getSchool(),
                 request.getCompany(),
                 request.getJob()
         );
     }
+
+
     @Override
     public void deleteStudent(Long id) {
         studentRepository.findById(id)

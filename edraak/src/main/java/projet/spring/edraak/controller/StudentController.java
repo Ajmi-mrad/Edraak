@@ -1,7 +1,6 @@
 package projet.spring.edraak.controller;
 
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import projet.spring.edraak.service.student.IStudentService;
 import projet.spring.edraak.response.ApiResponse;
 import projet.spring.edraak.model.Student;
-import projet.spring.edraak.request.AddStudentRequest;
-import projet.spring.edraak.request.StudentUpdateRequest;
+import projet.spring.edraak.request.student.AddStudentRequest;
+import projet.spring.edraak.request.student.StudentUpdateRequest;
 import projet.spring.edraak.exceptions.StudentNotFoundException;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -18,11 +17,15 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import java.time.LocalDate;
 import java.util.*;
 
-@RequiredArgsConstructor
+
 @RestController
 @RequestMapping("/api/v1/students")
 public class StudentController {
     private final IStudentService studentService;
+
+    public StudentController(IStudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllStudents(){

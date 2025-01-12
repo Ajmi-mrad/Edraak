@@ -1,49 +1,25 @@
-package projet.spring.edraak.model;
+package projet.spring.edraak.request.instructor;
 
-import jakarta.persistence.*;
-import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+import projet.spring.edraak.model.Speciality;
+import projet.spring.edraak.utils.DateParser;
 
 import java.time.LocalDate;
 
-
-
-
-
-@MappedSuperclass
-public class Person {
-
-    @Column(name = "name")
+public class InstructorUpdateRequest {
+    private Long id;
     private String name;
-    @Column(name = "lastName")
     private String lastName;
-    @Column(name = "email")
     private String email;
-    @Column(name = "phoneNumber")
     private String phoneNumber;
-    @Column(name = "birthDate")
-    private LocalDate birthDate;
-    @Column(name = "address")
+    private String birthDate;
     private String address;
-    @Column(name = "nationality")
-
     private String nationality;
-    @Column(name = "numId")
     private String numId;
-    public Person(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.birthDate = birthDate;
-        this.address = address;
-        this.nationality = nationality;
-        this.numId = numId;
+    private Speciality speciality;
+    private String cv;
 
-    }
-    public Person(){
 
-    }
-    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -77,10 +53,10 @@ public class Person {
     }
 
     public LocalDate getBirthDate() {
-        return birthDate;
+        return DateParser.parseStringToLocalDate(birthDate);
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -106,5 +82,29 @@ public class Person {
 
     public void setNumId(String numId) {
         this.numId = numId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Speciality getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(Speciality speciality) {
+        this.speciality = speciality;
+    }
+
+    public String getCv() {
+        return cv;
+    }
+
+    public void setCv(String cv) {
+        this.cv = cv;
     }
 }
