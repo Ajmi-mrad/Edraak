@@ -1,28 +1,20 @@
-package projet.spring.edraak.model;
+package projet.spring.edraak.request.formation;
 
-import jakarta.persistence.*;
+import projet.spring.edraak.model.TypeFormation;
 
-@Entity
-public class Formation{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FormationUpdateRequest {
     private Long id;
-
-    //type of student if a student or an employee
     private String name;
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "typeFormation_id", referencedColumnName = "id")
     private TypeFormation typeFormation;
 
-    public Formation(String nameFormation, String description, TypeFormation typeFormation) {
-        this.name = nameFormation;
+    public FormationUpdateRequest(Long id ,String name, String description, TypeFormation typeFormation) {
+        this.id= id;
+        this.name = name;
         this.description = description;
         this.typeFormation = typeFormation;
     }
-    public Formation(){
-
+    public FormationUpdateRequest(){
     }
 
     public Long getId() {
@@ -37,8 +29,8 @@ public class Formation{
         return name;
     }
 
-    public void setName(String nameFormation) {
-        this.name = nameFormation;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

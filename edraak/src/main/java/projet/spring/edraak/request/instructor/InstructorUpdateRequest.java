@@ -17,7 +17,7 @@ public class InstructorUpdateRequest {
     private String nationality;
     private String numId;
     private Speciality speciality;
-    private String cv;
+    private byte[] cv;
 
 
     public String getName() {
@@ -100,11 +100,11 @@ public class InstructorUpdateRequest {
         this.speciality = speciality;
     }
 
-    public String getCv() {
+    public byte[] getCv() {
         return cv;
     }
 
-    public void setCv(String cv) {
+    public void setCv(byte[] cv) {
         this.cv = cv;
     }
 }

@@ -5,12 +5,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.Speciality;
 import projet.spring.edraak.request.instructor.AddInstructorRequest;
 import projet.spring.edraak.request.instructor.InstructorUpdateRequest;
 import projet.spring.edraak.response.ApiResponse;
 import projet.spring.edraak.service.instructor.IInstructorService;
+import projet.spring.edraak.service.speciality.ISpecialityService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,10 +23,12 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequestMapping("/api/v1/instructors")
 public class InstructorController {
     private final IInstructorService instructorService;
+    private final ISpecialityService specialityService;
 
     @Autowired
-    public InstructorController(IInstructorService instructorService) {
+    public InstructorController(IInstructorService instructorService, ISpecialityService specialityService) {
         this.instructorService = instructorService;
+        this.specialityService = specialityService;
     }
 
     @GetMapping("/all")
@@ -32,7 +36,6 @@ public class InstructorController {
         List<Instructor> instructors = instructorService.getAllInstructors();
         return ResponseEntity.ok(new ApiResponse("Instructors fetched successfully", instructors));
     }
-
     @GetMapping("/{instructorId}")
     public ResponseEntity<ApiResponse> getInstructorById(@PathVariable Long instructorId) {
         try {
@@ -54,27 +57,45 @@ public class InstructorController {
     }
 
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> addInstructor(@RequestPart("request") AddInstructorRequest request) {
+    public ResponseEntity<ApiResponse> addInstructor(
+            @RequestParam("name") String name,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("email") String email,
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("birthDate") String birthDate,
+            @RequestParam("address") String address,
+            @RequestParam("nationality") String nationality,
+            @RequestParam("numId") String numId,
+            @RequestParam("speciality") String specialityName,
+            @RequestParam("cv") MultipartFile file
+    ) {
         try {
-            Instructor newInstructor = instructorService.addInstructor(request);
+            Speciality speciality = specialityService.getSpecialityByName(specialityName);
+            AddInstructorRequest request = new AddInstructorRequest(name,
+                    lastName, email, phoneNumber, birthDate, address, nationality ,numId,speciality);
+
+
+            byte[] cvBytes = file.getBytes();
+            request.setCv(cvBytes);
+            Instructor newInstructor = instructorService.addInstructor(request, cvBytes);
+            //Instructor newInstructor = instructorService.addInstructor(request, cvBytes);
             return ResponseEntity.ok(new ApiResponse("Instructor added successfully", newInstructor));
-        } catch (Exception e) {
+            } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-
-
-    @PutMapping("/{instructorId}/update")
-    public ResponseEntity<ApiResponse> updateInstructor(@RequestBody InstructorUpdateRequest request, @PathVariable Long instructorId) {
+    @PutMapping(path = "/{instructorId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> updateInstructor(@RequestBody InstructorUpdateRequest request, @RequestPart("file") MultipartFile file, @PathVariable Long instructorId) {
         try {
-            Instructor updatedInstructor = instructorService.updateInstructor(request, instructorId);
+            byte[] cvBytes = file.getBytes();
+
+            Instructor updatedInstructor = instructorService.updateInstructor(request, instructorId, cvBytes);
             return ResponseEntity.ok(new ApiResponse("Instructor updated successfully", updatedInstructor));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
-
     @GetMapping("/{firstName}/instructor")
     public ResponseEntity<ApiResponse> getInstructorByName(@PathVariable String firstName) {
         try {

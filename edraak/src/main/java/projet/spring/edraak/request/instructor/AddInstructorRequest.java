@@ -7,7 +7,6 @@ import projet.spring.edraak.utils.DateParser;
 
 import java.sql.Blob;
 import java.time.LocalDate;
-@AllArgsConstructor
 public class AddInstructorRequest {
     private String name;
     private String lastName;
@@ -18,7 +17,8 @@ public class AddInstructorRequest {
     private String nationality;
     private String numId;
     private Speciality speciality;
-    private String cv;
+    private byte[] cv;
+
 
 
     public String getName() {
@@ -93,11 +93,25 @@ public class AddInstructorRequest {
         this.speciality = speciality;
     }
 
-    public String getCv() {
+    public byte[] getCv() {
         return cv;
     }
 
-    public void setCv(String cv) {
+    public void setCv(byte[] cv) {
         this.cv = cv;
+    }
+
+    public AddInstructorRequest(String name, String lastName, String email, String phoneNumber, String birthDate, String address, String nationality, String numId, Speciality speciality) {
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.nationality = nationality;
+        this.numId = numId;
+        this.speciality = speciality;
+
+
     }
 }

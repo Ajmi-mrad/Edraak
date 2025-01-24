@@ -37,7 +37,7 @@ public class InstructorService implements IInstructorService{
     }
 
     @Override
-    public Instructor addInstructor(AddInstructorRequest request) {
+    public Instructor addInstructor(AddInstructorRequest request,byte[] cv) {
         Speciality speciality = Optional.ofNullable(specialityRepository.findByName(request.getSpeciality().getName()))
                 .orElseGet(() -> {
                     Speciality newSpeciality = new Speciality(request.getSpeciality().getName());
@@ -45,10 +45,10 @@ public class InstructorService implements IInstructorService{
                 });
         request.setSpeciality(speciality);
 
-        return instructorRepository.save(createInstructor(request, speciality));
+        return instructorRepository.save(createInstructor(request, speciality,cv));
     }
 
-    public Instructor createInstructor(AddInstructorRequest request, Speciality speciality) {
+    public Instructor createInstructor(AddInstructorRequest request, Speciality speciality,byte[] cv) {
         return new Instructor(
                 request.getName(),
                 request.getLastName(),
@@ -59,7 +59,8 @@ public class InstructorService implements IInstructorService{
                 request.getNationality(),
                 request.getNumId(),
                 speciality,
-                request.getCv()
+                cv
+
         );
     }
     @Override
@@ -71,14 +72,14 @@ public class InstructorService implements IInstructorService{
     }
 
     @Override
-    public Instructor updateInstructor(InstructorUpdateRequest request, Long id) {
+    public Instructor updateInstructor(InstructorUpdateRequest request, Long id,byte[] cv) {
         return Optional.ofNullable(getInstructorById(id)).map(existingInstructor -> {
-            Instructor updatedInstructor = updateExistingInstructor(existingInstructor, request);
+            Instructor updatedInstructor = updateExistingInstructor(existingInstructor, request,cv);
             return instructorRepository.save(updatedInstructor);
         }).orElseThrow(() -> new InstructorNotFoundException("Instructor not found"));
     }
 
-    private Instructor updateExistingInstructor(Instructor existingInstructor, InstructorUpdateRequest request) {
+    private Instructor updateExistingInstructor(Instructor existingInstructor, InstructorUpdateRequest request,byte[] cv) {
         existingInstructor.setName(request.getName());
         existingInstructor.setLastName(request.getLastName());
         existingInstructor.setEmail(request.getEmail());
@@ -88,7 +89,7 @@ public class InstructorService implements IInstructorService{
         existingInstructor.setNationality(request.getNationality());
         existingInstructor.setNumId(request.getNumId());
         existingInstructor.setSpeciality(request.getSpeciality());
-        existingInstructor.setCv(request.getCv());
+        existingInstructor.setCv(cv);
         return existingInstructor;
     }
     @Override
@@ -103,7 +104,6 @@ public class InstructorService implements IInstructorService{
 
     @Override
     public List<Instructor> getInstructorByLastName(String lastName) {
-
         return instructorRepository.findByLastName(lastName);
     }
 

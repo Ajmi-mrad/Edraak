@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface IInstructorService {
     Instructor getInstructorById(Long id);
-    Instructor addInstructor(AddInstructorRequest instructor);
+    Instructor addInstructor(AddInstructorRequest instructor , byte[] cv);
     public void deleteInstructor(Long id);
-    Instructor updateInstructor(InstructorUpdateRequest instructor, Long id );
+    Instructor updateInstructor(InstructorUpdateRequest instructor, Long id ,byte[] cv);
     Instructor getInstructorByEmail(String email);
     List<Instructor> getInstructorByFirstName(String firstName);
     List<Instructor> getInstructorByLastName(String lastName);

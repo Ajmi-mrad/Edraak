@@ -20,9 +20,10 @@ public class Instructor extends Person{
     private Speciality speciality;
 
     @Lob
-    private String cv;
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] cv;
 
-    public Instructor(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, Speciality speciality, String cv) {
+    public Instructor(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, Speciality speciality, byte[] cv) {
         super(name, lastName, email, phoneNumber, birthDate, address, nationality, numId);
         this.speciality = speciality;
         this.cv = cv;
@@ -48,11 +49,11 @@ public class Instructor extends Person{
         this.speciality = speciality;
     }
 
-    public String getCv() {
+    public byte[] getCv() {
         return cv;
     }
 
-    public void setCv(String cv) {
+    public void setCv(byte[] cv) {
         this.cv = cv;
     }
 }

@@ -5,5 +5,5 @@ import projet.spring.edraak.model.TypeFormation;
 
 public interface TypeFormationRepository extends JpaRepository<TypeFormation, Long> {
     TypeFormation findByName(String name);
-    boolean existsByName(String name);
+    Boolean existsByName(String name);
 }
