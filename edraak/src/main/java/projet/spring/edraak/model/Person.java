@@ -5,13 +5,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-
-
-
-
 @MappedSuperclass
-public class Person {
-
+public class Person{
     @Column(name = "name")
     private String name;
     @Column(name = "lastName")
@@ -25,7 +20,6 @@ public class Person {
     @Column(name = "address")
     private String address;
     @Column(name = "nationality")
-
     private String nationality;
     @Column(name = "numId")
     private String numId;

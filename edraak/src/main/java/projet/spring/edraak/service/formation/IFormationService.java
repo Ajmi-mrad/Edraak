@@ -1,6 +1,7 @@
 package projet.spring.edraak.service.formation;
 
 import projet.spring.edraak.model.Formation;
+import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.TypeFormation;
 import projet.spring.edraak.request.formation.AddFormationRequest;
 import projet.spring.edraak.request.formation.FormationUpdateRequest;

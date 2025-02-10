@@ -1,19 +1,32 @@
 package projet.spring.edraak.request.formation;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.TypeFormation;
+import projet.spring.edraak.utils.DateParser;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Nodes.collect;
 
 public class AddFormationRequest {
     private String name;
     private String description;
     private TypeFormation typeFormation;
-
-    public AddFormationRequest(String name, String description, TypeFormation typeFormation) {
-        this.name = name;
-        this.description = description;
-        this.typeFormation = typeFormation;
-    }
-    public AddFormationRequest(){
-    }
+    //@JsonFormat(pattern = "dd-MM-yyyy")
+    private String  startDate;
+    //@JsonFormat(pattern = "dd-MM-yyyy")
+    private String endDate;
+    private Float price;
+    private Integer maxParticipants;
+    private Integer minParticipants;
+    private String durationTotal;
+    private String durationOfSession;
+    private List<LocalDate> trainingDates;
+    private Instructor instructor;
 
     public String getName() {
         return name;
@@ -37,5 +50,96 @@ public class AddFormationRequest {
 
     public void setTypeFormation(TypeFormation typeFormation) {
         this.typeFormation = typeFormation;
+    }
+
+    public LocalDate getStartDate() {
+        return DateParser.parseStringToLocalDate(startDate);
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return DateParser.parseStringToLocalDate(endDate);
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public Integer getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(Integer maxParticipants) {
+        this.maxParticipants = maxParticipants;
+    }
+
+    public Integer getMinParticipants() {
+        return minParticipants;
+    }
+
+    public void setMinParticipants(Integer minParticipants) {
+        this.minParticipants = minParticipants;
+    }
+
+    public String getDurationTotal() {
+        return durationTotal;
+    }
+
+    public void setDurationTotal(String durationTotal) {
+        this.durationTotal = durationTotal;
+    }
+
+    public String getDurationOfSession() {
+        return durationOfSession;
+    }
+
+    public void setDurationOfSession(String durationOfSession) {
+        this.durationOfSession = durationOfSession;
+    }
+
+    public List<LocalDate> getTrainingDates() {
+         // map the list and parse each date string to LocalDate
+        return trainingDates.stream()
+        .map(DateParser.parseStringToLocalDate())
+        .collect(Collectors.toList());
+
+    }
+
+    public void setTrainingDates(List<LocalDate> trainingDates) {
+        this.trainingDates = trainingDates;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
+    public AddFormationRequest(String name, String description, TypeFormation typeFormation, String startDate, String endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<LocalDate> trainingDates, Instructor instructor) {
+        this.name = name;
+        this.description = description;
+        this.typeFormation = typeFormation;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.price = price;
+        this.maxParticipants = maxParticipants;
+        this.minParticipants = minParticipants;
+        this.durationTotal = durationTotal;
+        this.durationOfSession = durationOfSession;
+        this.trainingDates = trainingDates;
+        this.instructor = instructor;
     }
 }

@@ -1,18 +1,22 @@
 package projet.spring.edraak.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
 @AllArgsConstructor
-public class Instructor extends Person{
+public class Instructor extends Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
@@ -20,8 +24,12 @@ public class Instructor extends Person{
     private Speciality speciality;
 
     @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "LONGBLOB", name = "cv")
     private byte[] cv;
+
+    @OneToMany(mappedBy = "instructor")
+    @JsonManagedReference
+    private List<Formation> formations;
 
     public Instructor(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, Speciality speciality, byte[] cv) {
         super(name, lastName, email, phoneNumber, birthDate, address, nationality, numId);
