@@ -1,10 +1,12 @@
 package projet.spring.edraak.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
@@ -27,6 +29,14 @@ public class Student extends Person{
     // if student is an employee
     private String job;
     private String company;
+/*
+    @ManyToOne
+    @JoinColumn(name = "registration_id", referencedColumnName = "id")
+    private RegistrationFormation registrationFormation;
+*/
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<RegistrationFormation> registrationFormations;
 
     public Student(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, String typeStudent, String level, Section section, String school, String job, String company) {
         super(name, lastName, email, phoneNumber, birthDate, address, nationality, numId);
@@ -39,6 +49,14 @@ public class Student extends Person{
     }
     public Student(){
         super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTypeStudent() {

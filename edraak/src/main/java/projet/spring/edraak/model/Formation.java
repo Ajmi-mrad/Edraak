@@ -4,49 +4,63 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Formation{
+public class Formation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     //type of student if a student or an employee
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
     @ManyToOne
     @JoinColumn(name = "typeFormation_id", referencedColumnName = "id")
     private TypeFormation typeFormation;
-    @Column(name="start_date")
+    @Column(name = "start_date")
     private LocalDate startDate;
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private LocalDate endDate;
-    @Column(name="price")
-    private Float price ;
-    @Column(name="max_participants")
+    //@NotNull(message = "Price is mandatory")
+    @Positive(message = "Price must be positive")
+    @Column(name = "price")
+    private Float price;
+
+    //@NotNull(message = "Max participants is mandatory")
+    @Min(value = 1, message = "Max participants must be at least 1")
+    @Column(name = "max_participants")
     private Integer maxParticipants;
-    @Column(name="min_participants")
+
+    //@NotNull(message = "Min participants is mandatory")
+    @Min(value = 1, message = "Min participants must be at least 1")
+    @Column(name = "min_participants")
     private Integer minParticipants;
-    @Column(name="duration_total")
+    @Column(name = "duration_total")
     private String durationTotal;
-    @Column(name="durationOfSession")
+    @Column(name = "durationOfSession")
     private String durationOfSession;
     @ElementCollection
-    private List<LocalDate> trainingDates;
+    private List<LocalDateTime> trainingDates;
     @ManyToOne
+    //@NotNull
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     @JsonBackReference
     private Instructor instructor;
 
-    public Formation(String name, String description, TypeFormation typeFormation, LocalDate startDate, LocalDate endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<LocalDate> trainingDates, Instructor instructor) {
+    @OneToMany(mappedBy = "formation")
+    private List<RegistrationFormation> registrationFormations;
+
+    public Formation(String name, String description, TypeFormation typeFormation, LocalDate startDate, LocalDate endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<LocalDateTime> trainingDates, Instructor instructor) {
         this.name = name;
         this.description = description;
         this.typeFormation = typeFormation;
@@ -160,11 +174,11 @@ public class Formation{
         this.durationOfSession = durationOfSession;
     }
 
-    public List<LocalDate> getTrainingDates() {
+    public List<LocalDateTime> getTrainingDates() {
         return trainingDates;
     }
 
-    public void setTrainingDates(List<LocalDate> trainingDates) {
+    public void setTrainingDates(List<LocalDateTime> trainingDates) {
         this.trainingDates = trainingDates;
     }
 }

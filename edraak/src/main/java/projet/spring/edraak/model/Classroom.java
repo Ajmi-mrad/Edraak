@@ -1,9 +1,8 @@
 package projet.spring.edraak.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Classroom {
@@ -17,7 +16,8 @@ public class Classroom {
     }
     public Classroom(){
     }
-
+    @OneToMany(mappedBy = "classroom")
+    private List<RegistrationFormation> registrationFormations;
     public Long getId() {
         return id;
     }

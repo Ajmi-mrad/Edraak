@@ -5,12 +5,13 @@ import jakarta.persistence.ElementCollection;
 import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.TypeFormation;
 import projet.spring.edraak.utils.DateParser;
+import projet.spring.edraak.utils.DateTimeParser;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Nodes.collect;
 
 public class AddFormationRequest {
     private String name;
@@ -25,7 +26,7 @@ public class AddFormationRequest {
     private Integer minParticipants;
     private String durationTotal;
     private String durationOfSession;
-    private List<LocalDate> trainingDates;
+    private List<String> trainingDates;
     private Instructor instructor;
 
     public String getName() {
@@ -108,15 +109,21 @@ public class AddFormationRequest {
         this.durationOfSession = durationOfSession;
     }
 
-    public List<LocalDate> getTrainingDates() {
+    public List<LocalDateTime> getTrainingDates() {
          // map the list and parse each date string to LocalDate
-        return trainingDates.stream()
-        .map(DateParser.parseStringToLocalDate())
-        .collect(Collectors.toList());
-
+        return trainingDates.stream().map(DateTimeParser::parseStringToLocalDateTime).collect(Collectors.toList());
+        /*
+        // other methode
+        List<LocalDate> result = new ArrayList<>();
+        for (String dateString : trainingDates) {
+            LocalDate date = DateParser.parseStringToLocalDate(dateString);
+            result.add(date);
+        }
+        return result;
+         */
     }
 
-    public void setTrainingDates(List<LocalDate> trainingDates) {
+    public void setTrainingDates(List<String> trainingDates) {
         this.trainingDates = trainingDates;
     }
 
@@ -128,7 +135,7 @@ public class AddFormationRequest {
         this.instructor = instructor;
     }
 
-    public AddFormationRequest(String name, String description, TypeFormation typeFormation, String startDate, String endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<LocalDate> trainingDates, Instructor instructor) {
+    public AddFormationRequest(String name, String description, TypeFormation typeFormation, String startDate, String endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<String> trainingDates, Instructor instructor) {
         this.name = name;
         this.description = description;
         this.typeFormation = typeFormation;

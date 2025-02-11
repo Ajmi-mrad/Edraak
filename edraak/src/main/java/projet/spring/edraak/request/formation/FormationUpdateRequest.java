@@ -4,6 +4,8 @@ import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.TypeFormation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class FormationUpdateRequest {
     private Long id;
@@ -15,11 +17,13 @@ public class FormationUpdateRequest {
     private float price;
     private int maxParticipants;
     private int minParticipants;
-    private String duration;
+    private String durationTotal;
+    private String durationOfSession;
+    private List<LocalDateTime> trainingDates;
     private Instructor instructor;
 
-    public FormationUpdateRequest(Long id ,String name, String description, TypeFormation typeFormation) {
-        this.id= id;
+    public FormationUpdateRequest(Long id, String name, String description, TypeFormation typeFormation, LocalDate startDate, LocalDate endDate, float price, int maxParticipants, int minParticipants, String durationTotal, String durationOfSession, List<LocalDateTime> trainingDates, Instructor instructor) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.typeFormation = typeFormation;
@@ -28,9 +32,12 @@ public class FormationUpdateRequest {
         this.price = price;
         this.maxParticipants = maxParticipants;
         this.minParticipants = minParticipants;
-        this.duration = duration;
+        this.durationTotal = durationTotal;
+        this.durationOfSession = durationOfSession;
+        this.trainingDates = trainingDates;
         this.instructor = instructor;
     }
+
     public FormationUpdateRequest(){
     }
 
@@ -106,12 +113,28 @@ public class FormationUpdateRequest {
         this.minParticipants = minParticipants;
     }
 
-    public String getDuration() {
-        return duration;
+    public String getDurationTotal() {
+        return durationTotal;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setDurationTotal(String durationTotal) {
+        this.durationTotal = durationTotal;
+    }
+
+    public String getDurationOfSession() {
+        return durationOfSession;
+    }
+
+    public void setDurationOfSession(String durationOfSession) {
+        this.durationOfSession = durationOfSession;
+    }
+
+    public List<LocalDateTime> getTrainingDates() {
+        return trainingDates;
+    }
+
+    public void setTrainingDates(List<LocalDateTime> trainingDates) {
+        this.trainingDates = trainingDates;
     }
 
     public Instructor getInstructor() {

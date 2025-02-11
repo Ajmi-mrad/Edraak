@@ -59,6 +59,16 @@ public class FormationService implements IFormationService{
         request.setTypeFormation(typeFormation);
         Instructor instructor = instructorRepository.findById(request.getInstructor().getId())
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        // check if trainingDates are between startDate and endDate
+        if (formationRepository.existsByTrainingSessionsExistsBetweenStartDateAndEndDate(request.getStartDate(), request.getEndDate())) {
+            throw new FormationNotFoundException("Training dates are not between start date and end date");
+        }
+        // check if the number of training sessions equals to the number of training dates (DurationTotal / DurationOfSession == TrainingDates.size())
+        //if (formationRepository.existsByDurationTotalAndDurationOfSessionAndTrainingDatesSize(request.getDurationTotal(), request.getDurationOfSession(), request.getTrainingDates().size())) {
+          //  throw new FormationNotFoundException("Number of training sessions is not equal to the number of training dates");
+        //}
+
         //formation.setInstructor(instructor);
         //Instructor instructor = instructorRepository.findById(request.getInstructor().getId())
          //       .orElseThrow(()-> new InstructorNotFoundException("Instructor not found"));
@@ -109,7 +119,9 @@ public class FormationService implements IFormationService{
         existingFormation.setPrice(request.getPrice());
         existingFormation.setMaxParticipants(request.getMaxParticipants());
         existingFormation.setMinParticipants(request.getMinParticipants());
-        existingFormation.setDuration(request.getDuration());
+        existingFormation.setDurationTotal(request.getDurationTotal());
+        existingFormation.setDurationOfSession(request.getDurationOfSession());
+        existingFormation.setTrainingDates(request.getTrainingDates());
         existingFormation.setInstructor(request.getInstructor());
         return existingFormation;
     }

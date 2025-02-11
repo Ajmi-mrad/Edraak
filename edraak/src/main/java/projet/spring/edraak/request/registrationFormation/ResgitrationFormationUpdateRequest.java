@@ -1,40 +1,20 @@
-package projet.spring.edraak.model;
+package projet.spring.edraak.request.registrationFormation;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import projet.spring.edraak.model.Classroom;
+import projet.spring.edraak.model.Formation;
+import projet.spring.edraak.model.Student;
 
-import java.time.LocalDate;
-import java.util.List;
-
-@Entity
-public class RegistrationFormation{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+public class ResgitrationFormationUpdateRequest {
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "formation_id", referencedColumnName = "id")
     private Formation formation;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    @JsonBackReference
     private Student student;
-
-    @ManyToOne
-    @JoinColumn(name = "classroom_id", referencedColumnName = "id")
     private Classroom classroom;
-/*
-    @OneToMany(mappedBy = "registrationFormation")
-    private List<Student> students;
-*/
-    public RegistrationFormation(Formation formation, Student student, Classroom classroom) {
+
+    public ResgitrationFormationUpdateRequest(Long id, Formation formation, Student student, Classroom classroom) {
+        this.id = id;
         this.formation = formation;
         this.student = student;
         this.classroom = classroom;
-    }
-    public RegistrationFormation(){
     }
 
     public Long getId() {
