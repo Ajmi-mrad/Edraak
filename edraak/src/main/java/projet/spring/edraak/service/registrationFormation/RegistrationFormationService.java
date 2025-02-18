@@ -14,6 +14,7 @@ import projet.spring.edraak.repository.StudentRepository;
 import projet.spring.edraak.request.registrationFormation.AddRegistrationFormationRequest;
 import projet.spring.edraak.request.registrationFormation.ResgitrationFormationUpdateRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,35 +55,40 @@ public class RegistrationFormationService implements IRegistrationFormationServi
 
     @Override
     public RegistrationFormation addRegistrationFormation(AddRegistrationFormationRequest request) {
-        Formation formation = formationRepository.findById(request.getFormation().getId())
+        Formation formation = formationRepository.findById(request.getFormationId())
                 .orElseThrow(() -> new RegistrationFormationNotFoundException("Formation not found"));
-        Classroom classroom = classroomRepository.findById(request.getClassroom().getId())
+        Classroom classroom = classroomRepository.findById(request.getClassroomId())
                 .orElseThrow(() -> new RegistrationFormationNotFoundException("Classroom not found"));
-        Student student = studentRepository.findById(request.getStudent().getId())
+        Student student = studentRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new RegistrationFormationNotFoundException("Student not found"));
         // check if the student is already registered in the formation
         if (registrationFormationRepository.existsByFormationIdAndStudentId(student.getId(), formation.getId())) {
             throw new RegistrationFormationNotFoundException("Student already registered in the formation");
         }
         // check if the classroom is already full in certain date
+        /*
         if (registrationFormationRepository.existsByClassroomIdAndFormationId(classroom.getId(), formation.getId())) {
             throw new RegistrationFormationNotFoundException("Classroom already full in this date");
         }
+         */
         // check if the training session is aleady taken in the classroom in the same date
         for(int i = 0; i < formation.getTrainingDates().size(); i++) {
             if(registrationFormationRepository.checkIfTrainingSessionIsAlreadyTaken(classroom.getId(),formation.getTrainingDates().get(i))) {
-                throw new RegistrationFormationNotFoundException("Training session is already taken");
+                throw new RegistrationFormationNotFoundException("Training session is already taken in that date and in this classroom");
             }
         }
-        return registrationFormationRepository.save(createRegistrationFormation(request, formation, student, classroom));
+
+        return registrationFormationRepository.save(new RegistrationFormation(formation, student, classroom, request.getAbsenceDates()));
     }
+    /*
     public RegistrationFormation createRegistrationFormation(AddRegistrationFormationRequest request, Formation formation, Student student, Classroom classroom) {
         return new RegistrationFormation(
-                request.getFormation(),
-                request.getStudent(),
+                request.getFormationId(),
+                request.getStudentId(),
                 request.getClassroom()
         );
     }
+    */
 
     @Override
     public void deleteRegistrationFormation(Long id) {
@@ -101,9 +107,22 @@ public class RegistrationFormationService implements IRegistrationFormationServi
                 }).orElseThrow(() -> new RegistrationFormationNotFoundException("RegistrationFormation not found"));
     }
     private RegistrationFormation updateExistingRegistrationFormation(RegistrationFormation existingRegistrationFormation, ResgitrationFormationUpdateRequest request) {
-        existingRegistrationFormation.setClassroom(request.getClassroom());
-        existingRegistrationFormation.setFormation(request.getFormation());
-        existingRegistrationFormation.setStudent(request.getStudent());
+        existingRegistrationFormation.setFormation(formationRepository.findById(request.getIdFormation())
+                .orElseThrow(() -> new RegistrationFormationNotFoundException("Formation not found")));
+        existingRegistrationFormation.setStudent(studentRepository.findById(request.getIdStudent())
+                .orElseThrow(() -> new RegistrationFormationNotFoundException("Student not found")));
+        existingRegistrationFormation.setClassroom(classroomRepository.findById(request.getIdClassroom())
+                .orElseThrow(() -> new RegistrationFormationNotFoundException("Classroom not found")));
+
+        for (LocalDateTime absenceDate : request.getAbsenceDates()) {
+            if (!registrationFormationRepository.checkIfAbsenceDateIsTheSameOfTrainingDate(
+                    request.getIdFormation(),
+                    request.getIdClassroom(),
+                    absenceDate)) {
+                throw new RegistrationFormationNotFoundException("Absence date is not the same as the training date");
+            }
+        }
+        existingRegistrationFormation.setAbsenceDates(request.getAbsenceDates());
         return existingRegistrationFormation;
     }
 

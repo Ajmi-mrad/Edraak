@@ -1,9 +1,11 @@
 package projet.spring.edraak.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,20 +21,25 @@ public class RegistrationFormation{
 
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"registrationFormations"})
+    //@JsonBackReference
     private Student student;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id", referencedColumnName = "id")
     private Classroom classroom;
+
+    @ElementCollection
+    private List<LocalDateTime> absenceDates;
 /*
     @OneToMany(mappedBy = "registrationFormation")
     private List<Student> students;
 */
-    public RegistrationFormation(Formation formation, Student student, Classroom classroom) {
+    public RegistrationFormation(Formation formation, Student student, Classroom classroom , List<LocalDateTime> absenceDates) {
         this.formation = formation;
         this.student = student;
         this.classroom = classroom;
+        this.absenceDates = absenceDates;
     }
     public RegistrationFormation(){
     }
@@ -67,5 +74,13 @@ public class RegistrationFormation{
 
     public void setClassroom(Classroom classroom) {
         this.classroom = classroom;
+    }
+
+    public List<LocalDateTime> getAbsenceDates() {
+        return absenceDates;
+    }
+
+    public void setAbsenceDates(List<LocalDateTime> absenceDates) {
+        this.absenceDates = absenceDates;
     }
 }

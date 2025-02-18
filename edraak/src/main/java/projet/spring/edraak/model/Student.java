@@ -1,5 +1,6 @@
 package projet.spring.edraak.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +36,9 @@ public class Student extends Person{
     private RegistrationFormation registrationFormation;
 */
     @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
+    //@JsonManagedReference
+
+    @JsonIgnoreProperties({"student"})
     private List<RegistrationFormation> registrationFormations;
 
     public Student(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, String typeStudent, String level, Section section, String school, String job, String company) {

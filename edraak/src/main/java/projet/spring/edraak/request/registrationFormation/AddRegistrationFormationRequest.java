@@ -1,41 +1,53 @@
 package projet.spring.edraak.request.registrationFormation;
 
+import jakarta.validation.constraints.NotNull;
 import projet.spring.edraak.model.Classroom;
 import projet.spring.edraak.model.Formation;
 import projet.spring.edraak.model.Student;
+import projet.spring.edraak.utils.DateTimeParser;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddRegistrationFormationRequest {
-    private Formation formation;
-    private Student student;
-    private Classroom classroom;
+    @NotNull
+    private Long formationId;
 
-    public AddRegistrationFormationRequest(Formation formation, Student student, Classroom classroom) {
-        this.formation = formation;
-        this.student = student;
-        this.classroom = classroom;
+    @NotNull
+    private Long studentId;
+
+    @NotNull
+    private Long classroomId;
+    private List<String> absenceDates;
+
+    public Long getFormationId() {
+        return formationId;
     }
 
-    public Formation getFormation() {
-        return formation;
+    public void setFormationId(Long formationId) {
+        this.formationId = formationId;
     }
 
-    public void setFormation(Formation formation) {
-        this.formation = formation;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public Student getStudent() {
-        return student;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public Long getClassroomId() {
+        return classroomId;
     }
 
-    public Classroom getClassroom() {
-        return classroom;
+    public void setClassroomId(Long classroomId) {
+        this.classroomId = classroomId;
     }
-
-    public void setClassroom(Classroom classroom) {
-        this.classroom = classroom;
+    public List<LocalDateTime> getAbsenceDates() {
+        return absenceDates.stream().map(DateTimeParser::parseStringToLocalDateTime).collect(Collectors.toList());
+    }
+    public void setAbsenceDates(List<String> absenceDates) {
+        this.absenceDates = absenceDates;
     }
 }

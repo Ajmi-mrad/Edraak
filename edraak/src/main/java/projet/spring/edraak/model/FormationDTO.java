@@ -1,67 +1,25 @@
 package projet.spring.edraak.model;
 
-import com.fasterxml.jackson.annotation.*;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Formation {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class FormationDTO{
     private Long id;
-
-    //type of student if a student or an employee
-    @Column(name = "name")
     private String name;
-    @Column(name = "description")
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "typeFormation_id", referencedColumnName = "id")
     private TypeFormation typeFormation;
-    @Column(name = "start_date")
     private LocalDate startDate;
-    @Column(name = "end_date")
     private LocalDate endDate;
-    //@NotNull(message = "Price is mandatory")
-    @Positive(message = "Price must be positive")
-    @Column(name = "price")
-    private Float price;
-
-    //@NotNull(message = "Max participants is mandatory")
-    @Min(value = 1, message = "Max participants must be at least 1")
-    @Column(name = "max_participants")
-    private Integer maxParticipants;
-
-    //@NotNull(message = "Min participants is mandatory")
-    @Min(value = 1, message = "Min participants must be at least 1")
-    @Column(name = "min_participants")
-    private Integer minParticipants;
-    @Column(name = "duration_total")
+    private float price;
+    private int maxParticipants;
+    private int minParticipants;
     private String durationTotal;
-    @Column(name = "durationOfSession")
     private String durationOfSession;
-    @ElementCollection
     private List<LocalDateTime> trainingDates;
-    @ManyToOne(fetch = FetchType.EAGER)
-    //@NotNull
-    @JoinColumn(name = "instructor_id", referencedColumnName = "id")
-    //@JsonIgnore
-    //@JsonView(Views.FormationView)
-    @JsonIgnoreProperties({"formations"})
-    private Instructor instructor;
 
-    @OneToMany(mappedBy = "formation")
-    private List<RegistrationFormation> registrationFormations;
-
-    public Formation(String name, String description, TypeFormation typeFormation, LocalDate startDate, LocalDate endDate, Float price, Integer maxParticipants, Integer minParticipants, String durationTotal, String durationOfSession, List<LocalDateTime> trainingDates, Instructor instructor) {
+    public FormationDTO(Long id, String name, String description, TypeFormation typeFormation, LocalDate startDate, LocalDate endDate, float price, int maxParticipants, int minParticipants, String durationTotal, String durationOfSession, List<LocalDateTime> trainingDates) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.typeFormation = typeFormation;
@@ -73,9 +31,8 @@ public class Formation {
         this.durationTotal = durationTotal;
         this.durationOfSession = durationOfSession;
         this.trainingDates = trainingDates;
-        this.instructor = instructor;
     }
-    public Formation(){
+    public FormationDTO(){
 
     }
 
@@ -127,19 +84,25 @@ public class Formation {
         this.endDate = endDate;
     }
 
+
+    public String getDurationTotal() {
+        return durationTotal;
+    }
+
     public float getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(float price) {
         this.price = price;
     }
+
 
     public int getMaxParticipants() {
         return maxParticipants;
     }
 
-    public void setMaxParticipants(Integer maxParticipants) {
+    public void setMaxParticipants(int maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
 
@@ -147,20 +110,8 @@ public class Formation {
         return minParticipants;
     }
 
-    public void setMinParticipants(Integer minParticipants) {
+    public void setMinParticipants(int minParticipants) {
         this.minParticipants = minParticipants;
-    }
-
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
-
-    public String getDurationTotal() {
-        return durationTotal;
     }
 
     public void setDurationTotal(String durationTotal) {

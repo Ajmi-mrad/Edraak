@@ -1,5 +1,6 @@
 package projet.spring.edraak.service.formation;
 
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import projet.spring.edraak.exceptions.FormationNotFoundException;
@@ -42,11 +43,9 @@ public class FormationService implements IFormationService{
             throw new FormationNotFoundException(e.getMessage());
         }
     }
-
     @Override
     public Formation getFormationById(Long id) {
-        return formationRepository.findById(id).
-                orElseThrow(()-> new FormationNotFoundException("Formation not found"));
+        return formationRepository.findByIdWithInstructor(id);
     }
 
     @Override
@@ -59,9 +58,10 @@ public class FormationService implements IFormationService{
         request.setTypeFormation(typeFormation);
         Instructor instructor = instructorRepository.findById(request.getInstructor().getId())
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
+        request.setInstructor(instructor);
 
         // check if trainingDates are between startDate and endDate
-        if (formationRepository.existsByTrainingSessionsExistsBetweenStartDateAndEndDate(request.getStartDate(), request.getEndDate())) {
+        if (formationRepository.existsTrainingSessionsBetweenStartDateAndEndDate(request.getStartDate(), request.getEndDate())) {
             throw new FormationNotFoundException("Training dates are not between start date and end date");
         }
         // check if the number of training sessions equals to the number of training dates (DurationTotal / DurationOfSession == TrainingDates.size())
@@ -74,7 +74,9 @@ public class FormationService implements IFormationService{
          //       .orElseThrow(()-> new InstructorNotFoundException("Instructor not found"));
         //Instructor instructor = Optional.ofNullable(request.getInstructor())
           //      .orElseThrow(()-> new InstructorNotFoundException("Instructor not found"));
-        return formationRepository.save(createFormation(request,typeFormation, instructor));
+        Formation formation = formationRepository.save(createFormation(request,typeFormation, instructor));
+        formation.setInstructor(instructor);
+        return formation;
     }
     public Formation createFormation(AddFormationRequest request, TypeFormation typeFormation, Instructor instructor){
         return new Formation(

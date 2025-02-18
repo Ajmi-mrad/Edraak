@@ -13,7 +13,8 @@ public class DateTimeParser {
             "dd-MM-yyyy'T'HH:mm",
             "yyyy-MM-dd'T'HH:mm",
             "dd/MM/yyyy HH:mm",
-            "yyyy-MM-dd HH:mm:ss"
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd'T'HH:mm:ss"
     );
     // Method to parse a string to LocalDateTime using supported formats
     public static LocalDateTime parseStringToLocalDateTime(String dateString) {

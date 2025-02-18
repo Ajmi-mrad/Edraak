@@ -1,7 +1,6 @@
 package projet.spring.edraak.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +26,11 @@ public class Instructor extends Person {
     @Column(columnDefinition = "LONGBLOB", name = "cv")
     private byte[] cv;
 
-    @OneToMany(mappedBy = "instructor")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //@JsonManagedReference
+    @JsonIgnoreProperties({"instructor"})
     private List<Formation> formations;
+    //private List<FormationDTO> formas;
 
     public Instructor(String name, String lastName, String email, String phoneNumber, LocalDate birthDate, String address, String nationality, String numId, Speciality speciality, byte[] cv) {
         super(name, lastName, email, phoneNumber, birthDate, address, nationality, numId);
@@ -64,5 +65,26 @@ public class Instructor extends Person {
     public void setCv(byte[] cv) {
         this.cv = cv;
     }
+
+
+    public List<Formation> getFormations() {
+        return formations;
+    }
+
+    public void setFormations(List<Formation> formations) {
+        this.formations = formations;
+    }
+
+
+/*
+    public List<FormationDTO> getFormas() {
+        return formas;
+    }
+
+    public void setFormas(List<FormationDTO> formas) {
+        this.formas = formas;
+    }
+    
+ */
 }
 

@@ -17,7 +17,7 @@ public class FormationRepositoryImpl implements FormationRepositoryCustom {
             SELECT COUNT(ftd) = 0
             FROM Formation f 
             JOIN f.trainingDates ftd
-            WHERE ftd < :startDate OR ftd > :endDate
+            WHERE DATE(ftd) < DATE(:startDate) OR DATE(ftd) > DATE(:endDate)
         """;
         Query query = entityManager.createQuery(queryString);
         query.setParameter("startDate", startDate.atStartOfDay());

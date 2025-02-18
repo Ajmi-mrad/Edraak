@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import projet.spring.edraak.exceptions.InstructorNotFoundException;
+import projet.spring.edraak.model.Formation;
+import projet.spring.edraak.model.FormationDTO;
 import projet.spring.edraak.model.Instructor;
 import projet.spring.edraak.model.Speciality;
+import projet.spring.edraak.repository.FormationRepository;
 import projet.spring.edraak.repository.InstructorRepository;
 import projet.spring.edraak.repository.SpecialityRepository;
 import projet.spring.edraak.request.instructor.AddInstructorRequest;
@@ -23,17 +26,46 @@ import java.util.Optional;
 public class InstructorService implements IInstructorService{
     private final InstructorRepository instructorRepository;
     private final SpecialityRepository specialityRepository;
+    private final FormationRepository formationRepository;
 
     @Autowired
-    public InstructorService(InstructorRepository instructorRepository,SpecialityRepository specialityRepository) {
+    public InstructorService(InstructorRepository instructorRepository,SpecialityRepository specialityRepository,FormationRepository formationRepository) {
         this.instructorRepository = instructorRepository;
         this.specialityRepository = specialityRepository;
+        this.formationRepository = formationRepository;
+    }
+
+    public FormationDTO mapToFormationDTO(Formation formation) {
+        FormationDTO dto = new FormationDTO();
+        dto.setId(formation.getId());
+        dto.setName(formation.getName());
+        dto.setDescription(formation.getDescription());
+        dto.setStartDate(formation.getStartDate());
+        dto.setEndDate(formation.getEndDate());
+        dto.setPrice(formation.getPrice());
+        dto.setMaxParticipants(formation.getMaxParticipants());
+        dto.setMinParticipants(formation.getMinParticipants());
+        dto.setTrainingDates(formation.getTrainingDates());
+        return dto;
     }
 
     @Override
     public Instructor getInstructorById(Long id) {
-        return instructorRepository.findById(id)
+        // Fetch Instructor
+        Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new InstructorNotFoundException("Instructor not found"));
+/*
+        // Map Formations to FormationDTOs
+        List<Formation> formations = instructorRepository.findFormationsByInstructorId(id);
+        List<FormationDTO> formationDTOs = formations.stream()
+                .map(this::mapToFormationDTO)
+                .toList();
+
+        // Set DTOs in Instructor
+        instructor.setFormations(formations);
+         // Ensure Instructor holds real entities if needed
+ */
+        return instructor;
     }
 
     @Override

@@ -58,9 +58,9 @@ public class RegistrationFormationController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addRegistrationFormation(@Valid @RequestBody AddRegistrationFormationRequest request) {
         try {
-            Formation formation = formationService.getFormationById(request.getFormation().getId());
-            Classroom classroom = classroomService.getClassroomById(request.getClassroom().getId());
-            Student student = studentService.getStudentById(request.getStudent().getId());
+            Formation formation = formationService.getFormationById(request.getFormationId());
+            Classroom classroom = classroomService.getClassroomById(request.getClassroomId());
+            Student student = studentService.getStudentById(request.getStudentId());
             if (formation == null) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Formation not found", null));
             }
@@ -76,9 +76,6 @@ public class RegistrationFormationController {
                         " exist between the start date and end date of the formation in the classroom", null));
 
              */
-            request.setClassroom(classroom);
-            request.setFormation(formation);
-            request.setStudent(student);
             RegistrationFormation newRegistrationFormation = registrationFormationService.addRegistrationFormation(request);
             return ResponseEntity.ok(new ApiResponse("Registration Formation added successfully", newRegistrationFormation));
         } catch (Exception e) {

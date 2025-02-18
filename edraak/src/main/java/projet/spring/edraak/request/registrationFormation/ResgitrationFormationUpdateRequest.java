@@ -4,18 +4,17 @@ import projet.spring.edraak.model.Classroom;
 import projet.spring.edraak.model.Formation;
 import projet.spring.edraak.model.Student;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class ResgitrationFormationUpdateRequest {
     private Long id;
-    private Formation formation;
-    private Student student;
-    private Classroom classroom;
+    private Long  idFormation;
+    private Long idStudent;
+    private Long idClassroom;
+    private List<LocalDateTime> absenceDates;
 
-    public ResgitrationFormationUpdateRequest(Long id, Formation formation, Student student, Classroom classroom) {
-        this.id = id;
-        this.formation = formation;
-        this.student = student;
-        this.classroom = classroom;
-    }
+
 
     public Long getId() {
         return id;
@@ -25,27 +24,35 @@ public class ResgitrationFormationUpdateRequest {
         this.id = id;
     }
 
-    public Formation getFormation() {
-        return formation;
+    public Long getIdFormation() {
+        return idFormation;
     }
 
-    public void setFormation(Formation formation) {
-        this.formation = formation;
+    public void setIdFormation(Long idFormation) {
+        this.idFormation = idFormation;
     }
 
-    public Student getStudent() {
-        return student;
+    public Long getIdStudent() {
+        return idStudent;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setIdStudent(Long idStudent) {
+        this.idStudent = idStudent;
     }
 
-    public Classroom getClassroom() {
-        return classroom;
+    public Long getIdClassroom() {
+        return idClassroom;
     }
 
-    public void setClassroom(Classroom classroom) {
-        this.classroom = classroom;
+    public void setIdClassroom(Long idClassroom) {
+        this.idClassroom = idClassroom;
+    }
+
+    public List<LocalDateTime> getAbsenceDates() {
+        return absenceDates;
+    }
+
+    public void setAbsenceDates(List<LocalDateTime> absenceDates) {
+        this.absenceDates = absenceDates;
     }
 }
