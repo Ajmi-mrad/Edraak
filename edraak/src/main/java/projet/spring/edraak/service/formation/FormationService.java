@@ -15,6 +15,8 @@ import projet.spring.edraak.request.formation.AddFormationRequest;
 import projet.spring.edraak.request.formation.FormationUpdateRequest;
 import projet.spring.edraak.request.typeFormation.TypeFormationUpdateRequest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,15 @@ public class FormationService implements IFormationService{
     public Formation getFormationById(Long id) {
         return formationRepository.findByIdWithInstructor(id);
     }
+    private boolean areTrainingDatesWithinRange(LocalDate startDate, LocalDate endDate, List<LocalDateTime> trainingDates) {
+        if (trainingDates == null || trainingDates.isEmpty()) return false;
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        return trainingDates.stream()
+                .allMatch(date -> !date.isBefore(startDateTime) && !date.isAfter(endDateTime));
+    }
 
     @Override
     public Formation addFormation(AddFormationRequest request) {
@@ -61,7 +72,7 @@ public class FormationService implements IFormationService{
         request.setInstructor(instructor);
 
         // check if trainingDates are between startDate and endDate
-        if (formationRepository.existsTrainingSessionsBetweenStartDateAndEndDate(request.getStartDate(), request.getEndDate())) {
+        if (!areTrainingDatesWithinRange(request.getStartDate(), request.getEndDate(), request.getTrainingDates())){
             throw new FormationNotFoundException("Training dates are not between start date and end date");
         }
         // check if the number of training sessions equals to the number of training dates (DurationTotal / DurationOfSession == TrainingDates.size())
@@ -124,6 +135,9 @@ public class FormationService implements IFormationService{
         existingFormation.setDurationTotal(request.getDurationTotal());
         existingFormation.setDurationOfSession(request.getDurationOfSession());
         existingFormation.setTrainingDates(request.getTrainingDates());
+        if (!areTrainingDatesWithinRange(request.getStartDate(), request.getEndDate(), request.getTrainingDates())) {
+            throw new FormationNotFoundException("Training dates are not between start date and end date");
+        }
         existingFormation.setInstructor(request.getInstructor());
         return existingFormation;
     }

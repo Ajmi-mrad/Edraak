@@ -1,0 +1,26 @@
+
+application:
+  security:
+    jwt:
+      secret-key: a64ce33fc2788681f65234b65210038c2c65f1ef9f3de258226ae4e16b1575e5
+      expiration: 86400000
+  mailing:
+    frontend:
+      activation-url: http://localhost:4200/activate-account
+spring:
+  mail:
+    host: localhost
+    port: 1025
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          trust:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+

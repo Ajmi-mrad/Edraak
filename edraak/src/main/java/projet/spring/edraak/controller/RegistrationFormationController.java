@@ -83,7 +83,7 @@ public class RegistrationFormationController {
         }
     }
     @PutMapping("/{registrationFormationId}/update")
-    public ResponseEntity<ApiResponse> updateRegistrationFormation(@RequestBody ResgitrationFormationUpdateRequest request, @PathVariable Long registrationFormationId) {
+    public ResponseEntity<ApiResponse> updateRegistrationFormation(@Valid @RequestBody ResgitrationFormationUpdateRequest request, @PathVariable Long registrationFormationId) {
         try {
             RegistrationFormation updatedRegistrationFormation = registrationFormationService.updateRegistrationFormation(request, registrationFormationId);
             return ResponseEntity.ok(new ApiResponse("Registration Formation updated successfully", updatedRegistrationFormation));

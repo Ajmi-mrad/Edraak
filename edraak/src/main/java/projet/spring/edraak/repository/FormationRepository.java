@@ -11,10 +11,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface FormationRepository extends JpaRepository<Formation, Long>, FormationRepositoryCustom{
-    @Query("SELECT f FROM Formation f JOIN FETCH f.instructor WHERE f.id = :id")
+    @Query("SELECT f FROM Formation f LEFT JOIN FETCH f.instructor WHERE f.id = :id")
     Formation findByIdWithInstructor(Long id); // fetch instructor with formation
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Formation f WHERE :startDate MEMBER OF f.trainingDates AND :endDate MEMBER OF f.trainingDates")
-    Boolean existsTrainingSessionsBetweenStartDateAndEndDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    //@Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Formation f WHERE :startDate MEMBER OF f.trainingDates AND :endDate MEMBER OF f.trainingDates")
+    //Boolean existsTrainingSessionsBetweenStartDateAndEndDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("""
+    SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END
+    FROM Formation f
+    WHERE NOT EXISTS (
+        SELECT t FROM f.trainingDates t
+        WHERE t < :startDateTime OR t > :endDateTime
+    )
+""")
+    Boolean existsTrainingSessionsBetweenStartDateAndEndDate(
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
     Formation findByName(String name);
     // check if the training sessions exists between start date and end date
     //@Query("SELECT COUNT(f) FROM Formation f WHERE :startDate MEMBER OF f.trainingDates AND :endDate MEMBER OF f.trainingDates")

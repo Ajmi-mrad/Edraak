@@ -48,7 +48,11 @@ public class Formation {
     private String durationTotal;
     @Column(name = "durationOfSession")
     private String durationOfSession;
+    //@ElementCollection
+    //private List<LocalDateTime> trainingDates;
     @ElementCollection
+    //@CollectionTable(name = "training_dates", joinColumns = @JoinColumn(name = "formation_id"))
+    @Column(name = "training_date")
     private List<LocalDateTime> trainingDates;
     @ManyToOne(fetch = FetchType.EAGER)
     //@NotNull

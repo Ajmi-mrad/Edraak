@@ -1,5 +1,6 @@
 package projet.spring.edraak.request.registrationFormation;
 
+import jakarta.validation.constraints.NotNull;
 import projet.spring.edraak.model.Classroom;
 import projet.spring.edraak.model.Formation;
 import projet.spring.edraak.model.Student;
@@ -9,8 +10,13 @@ import java.util.List;
 
 public class ResgitrationFormationUpdateRequest {
     private Long id;
-    private Long  idFormation;
+    @NotNull
+    private Long idFormation;
+
+    @NotNull
     private Long idStudent;
+
+    @NotNull
     private Long idClassroom;
     private List<LocalDateTime> absenceDates;
 
