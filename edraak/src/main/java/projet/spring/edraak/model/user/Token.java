@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 //@Builder
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
     private String token;
 

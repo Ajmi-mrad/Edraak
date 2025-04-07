@@ -3,6 +3,7 @@ package projet.spring.edraak.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +29,6 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtFilter jwtAuthFilter;
 
-
     public SecurityConfig(AuthenticationProvider authenticationProvider, JwtFilter jwtAuthFilter) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthFilter = jwtAuthFilter;
@@ -43,8 +43,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // authorize requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**"
-                                            ,"/auth/**"
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register"
+                                /*
+                                "/api/v1/auth/**",
+                                            "/auth/**"
                                             ,"/swagger-ui/**"
                                             ,"/v3/api-docs/**"
                                             ,"/swagger-ui.html"
@@ -52,7 +54,11 @@ public class SecurityConfig {
                                             ,"swagger-resources/**"
                                             ,"/configuration/ui"
                                             ,"/configuration/security"
+
+                                 */
+
                         ).permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 // session management and mean that we don't need to store session and we don't need to use cookies
@@ -65,11 +71,11 @@ public class SecurityConfig {
 
         return http.build();
     }
-    /*
+/*
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-     */
+ */
 }

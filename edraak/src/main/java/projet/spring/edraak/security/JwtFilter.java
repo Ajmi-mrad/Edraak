@@ -39,7 +39,17 @@ public class JwtFilter extends OncePerRequestFilter {
             @NotNull FilterChain filterChain
             )throws ServletException, IOException {
         // check if the request is for the authentication endpoint
-        if (request.getServletPath().contains("/api/v1/auth")) {
+        // bech nabdlha mdeep
+        /*if (request.getServletPath().contains("/api/v1/auth/**")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+         */
+        String path = request.getServletPath();
+        if (path.startsWith("/api/v1/auth/") ||
+                path.startsWith("/auth/") ||
+                path.startsWith("/swagger-ui/") ||
+                path.startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(AUTHORIZATION);
         final String jwt;
         final String userEmail;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }

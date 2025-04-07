@@ -1,6 +1,8 @@
 package projet.spring.edraak.service.auth;
 
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +29,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
-
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     public AuthenticationService(RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, TokenRepository tokenRepository, EmailService emailService) {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -35,7 +37,7 @@ public class AuthenticationService {
         this.tokenRepository = tokenRepository;
         this.emailService = emailService;
     }
-
+/*
     public void register(RegistrationRequest request) throws MessagingException {
             var userRole = roleRepository.findByName("USER")
                     .orElseThrow(() -> new IllegalArgumentException("Error: Role was not iniztialized."));
@@ -64,6 +66,40 @@ public class AuthenticationService {
         );
     }
 
+
+ */
+
+    // other fields and constructor
+
+    public void register(RegistrationRequest request) throws MessagingException {
+        var userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new IllegalArgumentException("Error: Role was not initialized."));
+        var user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .accountLocked(false)
+                .enabled(false)
+                .roles(List.of(userRole))
+                .build();
+        userRepository.save(user);
+        logger.info("User registered: {}", user.getEmail());
+        sendValidationEmail(user);
+    }
+
+    private void sendValidationEmail(User user) throws MessagingException {
+        var newToken = generateAndSaveActivationToken(user);
+        logger.info("Sending validation email to: {}", user.getEmail());
+        emailService.sendEmail(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACCOUNT_ACTIVATION,
+                activationUrl + "?token=" + newToken,
+                newToken,
+                "Account Activation"
+        );
+    }
     private String generateAndSaveActivationToken(User user) {
         // generate token
         String generatedToken = generateActivationCode(6);

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 
 @Service
@@ -23,6 +25,7 @@ public class JwtService {
     private long jwtExpiration;
     //@Value("${application.security.jwt.secret-key}")
     private String secretKey;
+    private static final Logger logger = Logger.getLogger(JwtService.class.getName());
     public JwtService(
             @Value("${application.security.jwt.expiration}") long jwtExpiration,
             @Value("${application.security.jwt.secret-key}") String secretKey) {
@@ -32,6 +35,12 @@ public class JwtService {
         this.jwtExpiration = jwtExpiration;
         this.secretKey = secretKey;
 
+    }
+
+    @PostConstruct
+    public void init() {
+        logger.info("JWT Expiration: " + jwtExpiration);
+        logger.info("JWT Secret Key: " + secretKey);
     }
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(), userDetails);

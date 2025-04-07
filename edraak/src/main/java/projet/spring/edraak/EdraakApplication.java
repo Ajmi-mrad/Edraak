@@ -6,10 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import projet.spring.edraak.model.role.Role;
 import projet.spring.edraak.repository.role.RoleRepository;
 
-@SpringBootApplication(scanBasePackages = "projet.spring.edraak")
+@SpringBootApplication
 // i enbale the jpa auditing to let @EntityListeners(AuditingEntityListener.class) working
 @EnableJpaAuditing
 @EnableAsync
